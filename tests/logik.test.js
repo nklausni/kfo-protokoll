@@ -50,7 +50,16 @@ test("Morgens 'heute' statt 'gestern' gewählt: Vorschlag für gestern", () => {
   const p = pruefeEintrag(e("2026-10-08", "20:30", "07:00", "neu"), [], morgens);
   assert.equal(p.ok, false);
   assert.equal(p.vorschlag.tag, "2026-10-07");
+  assert.equal(p.nacht, true);
   assert.equal(pruefeEintrag(p.vorschlag, [], morgens).ok, true);
+});
+
+test("Spätere Zeit am selben Tag ist keine Nacht", () => {
+  // 14:00 Uhr, eingetragen 23:10–23:55 für heute: liegt in der Zukunft, geht aber nicht über Mitternacht
+  const p = pruefeEintrag(e("2026-10-08", "23:10", "23:55", "neu"), [], JETZT);
+  assert.equal(p.ok, false);
+  assert.equal(p.nacht, false);
+  assert.match(p.fehler, /Zukunft/);
 });
 
 test("Zukunft, gleiche Zeiten und laufende Zeiten", () => {

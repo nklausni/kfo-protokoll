@@ -390,10 +390,11 @@ function oeffneFormular(vorgabe = {}) {
   aktualisiereFormular(true);
 }
 
-// Morgens ist mit einer Nacht-Zeit fast immer die letzte Nacht gemeint
-function nachtAufGestern() {
+// Morgens ist mit einer Nacht-Zeit fast immer die letzte Nacht gemeint. Die Schnellwahl stellt
+// darum nur bei Zeiten über Mitternacht von selbst auf gestern um, sonst nur auf Nachfrage.
+function vorschlagUebernehmen({ nurNacht = false } = {}) {
   const p = pruefeEintrag(formular, sp.get().eintraege);
-  if (!p.ok && p.vorschlag) formular.tag = p.vorschlag.tag;
+  if (!p.ok && p.vorschlag && (p.nacht || !nurNacht)) formular.tag = p.vorschlag.tag;
 }
 
 function aktualisiereFormular(felderSetzen = false) {
@@ -421,9 +422,9 @@ function aktualisiereFormular(felderSetzen = false) {
   const p = pruefeEintrag(formular, sp.get().eintraege);
   speichern.disabled = !p.ok;
   if (!p.ok) {
+    const frage = p.nacht ? "Meinst du die Nacht von gestern auf heute?" : "Diese Zeit liegt noch in der Zukunft. Meinst du gestern?";
     v.innerHTML = `<div class="meldung fehler">${p.vorschlag
-      ? `<span>Meinst du die Nacht ${tageZwischen(p.vorschlag.tag, heute) === 1 ? "von gestern auf heute" : `ab ${tagKurz(p.vorschlag.tag)}`}?</span>
-         <button type="button" class="knopf-klein" data-aktion="vorschlag">Ja, eintragen für ${tagRelativ(p.vorschlag.tag, heute)}</button>`
+      ? `<span>${frage}</span><button type="button" class="knopf-klein" data-aktion="vorschlag">Ja, für gestern eintragen</button>`
       : `<span>${esc(p.fehler)}</span>`}</div>`;
     return;
   }
@@ -869,7 +870,7 @@ const AKTIONEN = {
   schnell: (wert) => {
     const [von, bis] = wert.split("-");
     oeffneFormular({ von, bis });
-    nachtAufGestern();
+    vorschlagUebernehmen({ nurNacht: true });
     aktualisiereFormular(true);
   },
   bearbeiten: (id) => {
@@ -879,11 +880,11 @@ const AKTIONEN = {
   "f-tag": (wert) => { formular.tag = wert; aktualisiereFormular(); },
   vorlage: (wert) => {
     [formular.von, formular.bis] = wert.split("-");
-    nachtAufGestern();
+    vorschlagUebernehmen({ nurNacht: true });
     aktualisiereFormular(true);
   },
   jetzt: (feld) => { formular[feld] = uhrzeit(); aktualisiereFormular(true); },
-  vorschlag: () => { nachtAufGestern(); aktualisiereFormular(); },
+  vorschlag: () => { vorschlagUebernehmen(); aktualisiereFormular(); },
   loeschen: () => {
     const e = sp.loescheEintrag(formular?.id);
     formular = null;

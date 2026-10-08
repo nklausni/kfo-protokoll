@@ -61,7 +61,9 @@ const SPIELRAUM = 60;
 
 /**
  * Prüft einen neuen oder geänderten Eintrag.
- * @returns {{ok:boolean, fehler?:string, vorschlag?:object, hinweis?:string}}
+ * @returns {{ok:boolean, fehler?:string, vorschlag?:object, nacht?:boolean, hinweis?:string}}
+ *   vorschlag: derselbe Eintrag für gestern, wenn "heute" gewählt ist, die Zeit aber noch nicht begonnen hat
+ *   nacht: der Eintrag geht über Mitternacht
  */
 export function pruefeEintrag(e, alle, jetzt = new Date()) {
   if (!e.tag || !e.von || !e.bis) return { ok: false, fehler: "Trag bitte ein, von wann bis wann." };
@@ -75,7 +77,12 @@ export function pruefeEintrag(e, alle, jetzt = new Date()) {
     // Morgens wird oft "heute" gewählt, gemeint ist aber die letzte Nacht
     const gestern = { ...e, tag: plusTage(e.tag, -1) };
     const passt = e.tag === heute && spanne(gestern)[0] <= jetztAbs + SPIELRAUM && !ueberschneidung(gestern, alle);
-    return { ok: false, fehler: "Diese Zeit hat noch gar nicht angefangen.", vorschlag: passt ? gestern : null };
+    return {
+      ok: false,
+      fehler: "Diese Zeit liegt noch in der Zukunft. Trag sie ein, sobald die Spange drin ist.",
+      vorschlag: passt ? gestern : null,
+      nacht: zeitMin(e.bis) < zeitMin(e.von),
+    };
   }
   const k = ueberschneidung(e, alle);
   if (k) {
