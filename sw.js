@@ -1,6 +1,6 @@
 // Offline-Cache: Antwort sofort aus dem Cache, im Hintergrund aktualisieren.
 // Bei Änderungen an den Dateien VERSION hochzählen. Das Protokoll selbst liegt nicht im Cache.
-const VERSION = "v1";
+const VERSION = "v2";
 const DATEIEN = [
   "./", "index.html", "manifest.webmanifest", "css/app.css",
   "js/app.js", "js/speicher.js", "js/auswertung.js", "js/zeit.js", "js/csv.js",

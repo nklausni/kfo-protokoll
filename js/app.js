@@ -317,11 +317,11 @@ function zeigeHeute() {
   const min = a.minuten(t), ziel = a.ziel(t);
   const fertig = min >= ziel;
   zeige(`<div class="seite heute">
-    <header class="kopf">
-      <div class="kopf-text"><div class="datum">${tagLang(t)}</div><h1>Hallo ${esc(s.name)}!</h1></div>
+    <header class="kopf kopf-heute">
+      <div class="datum">${tagLang(t)}</div>
       <div class="kopf-rechts">${seriePill(a.serie)}<button class="icon-knopf" data-aktion="einstellungen" aria-label="Einstellungen">${icon("gear")}</button></div>
+      <h1>Hallo ${esc(s.name)}!</h1>
     </header>
-    ${browserHinweis(s)}
     <section class="karte-box tageskarte${fertig ? " fertig" : ""}">
       <div class="sprechblase">${esc(spruch(a))}</div>
       <div class="ring-rahmen">
@@ -333,6 +333,7 @@ function zeigeHeute() {
       <div class="rest">${fertig ? `${icon("check", 18, { sw: 3 })}Tagesziel geschafft` : `Noch ${dauerText(ziel - min)}`}</div>
       <button class="knopf knopf-haupt" data-aktion="eintragen">${icon("plus", 22, { sw: 2.8 })}Tragezeit eintragen</button>
     </section>
+    ${browserHinweis(s)}
     ${schnellwahl(s)}
     ${nachtKarte(a, s)}
     ${gesternKarte(a)}

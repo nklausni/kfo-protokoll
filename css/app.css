@@ -155,6 +155,10 @@ p { margin: 0; line-height: 1.4; }
 .kopf h1 { font-size: 28px; overflow-wrap: break-word; }
 .kopf .datum { font-size: 14px; font-weight: 800; color: var(--tinte-2); margin-bottom: 2px; }
 .kopf-rechts { display: flex; align-items: center; gap: 2px; }
+/* Heute: Gruß in eigener Zeile über die volle Breite, damit auch lange Namen nicht umbrechen */
+.kopf-heute { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; padding-top: 0; }
+.kopf-heute .datum { margin: 0; }
+.kopf-heute h1 { grid-column: 1 / -1; margin-top: -2px; }
 .seiten-kopf { display: flex; align-items: center; gap: 4px; margin: 0 0 -4px -10px; }
 .seiten-kopf h1 { font-size: 26px; }
 
@@ -573,6 +577,8 @@ p { margin: 0; line-height: 1.4; }
   .zeit-feld input { font-size: 24px; }
 }
 @media (max-height: 700px) {
+  .tierwahl { gap: 12px; padding-top: 16px; }
+  .tierwahl .art .tier { width: 92px; height: 92px; }
   .ring-rahmen { width: 196px; height: 196px; }
   .ring-tier { inset: 26px; }
   .tageszahl b { font-size: 26px; }
