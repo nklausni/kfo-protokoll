@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Spangen-Protokoll</title>
+  <meta name="description" content="Trageprotokoll für die Zahnspange: Zeiten eintragen, Tagesziel schaffen, Tier wachsen lassen.">
+  <meta name="theme-color" content="#FBF5E9">
+  <meta name="color-scheme" content="light">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Spange">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="preload" href="fonts/nunito-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/grandstander-800.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+  <main id="app"></main>
+  <input type="file" id="datei-wahl" accept=".csv,text/csv,text/comma-separated-values,text/plain" hidden>
+  <noscript>Bitte JavaScript aktivieren, damit das Protokoll funktioniert.</noscript>
+  <script>
+    // Sicherheitsnetz nach Updates: Wurden alte und neue Dateien gemischt geladen, einmal den
+    // Datei-Cache leeren und neu laden. Das Protokoll (localStorage, IndexedDB) bleibt dabei unberührt.
+    window.addEventListener("error", function (e) {
+      if (!/export|import|module/i.test(e.message || "") || sessionStorage.getItem("protokoll-neu-geladen")) return;
+      sessionStorage.setItem("protokoll-neu-geladen", "1");
+      var leeren = window.caches ? caches.keys().then(function (k) { return Promise.all(k.map(function (n) { return caches.delete(n); })); }) : Promise.resolve();
+      leeren.then(function () { location.reload(); }, function () { location.reload(); });
+    });
+  </script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

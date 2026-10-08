@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tier-Vorschau</title>
+  <link rel="stylesheet" href="../css/app.css">
+  <style>
+    body { padding: 16px; }
+    h2 { margin: 18px 0 8px; }
+    .reihe { display: flex; flex-wrap: wrap; gap: 8px; }
+    .zelle { width: 120px; text-align: center; font-size: 12px; }
+    .zelle .tier { width: 120px; height: 120px; }
+  </style>
+</head>
+<body>
+  <!-- Entwicklerhilfe: alle Tiere in allen Stufen und mit allen Sachen. Nicht Teil der App. -->
+  <div id="inhalt"></div>
+  <script type="module">
+    import { tierSvg, ARTEN, STUFEN, SACHEN } from "../js/tier.js";
+    let html = "";
+    for (const art of Object.keys(ARTEN)) {
+      html += `<h2>${ARTEN[art].name}</h2><div class="reihe">`;
+      STUFEN.forEach((s, i) => { html += `<div class="zelle">${tierSvg({ art, stufe: i, jubel: i === 6 })}<div>${i}: ${s.name}</div></div>`; });
+      SACHEN.forEach((x) => { html += `<div class="zelle">${tierSvg({ art, stufe: 6, sache: x.id })}<div>${x.name}</div></div>`; });
+      html += "</div>";
+    }
+    document.getElementById("inhalt").innerHTML = html;
+  </script>
+</body>
+</html>
